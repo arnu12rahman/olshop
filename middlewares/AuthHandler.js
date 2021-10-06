@@ -1,8 +1,8 @@
 import asyncHandler from 'express-async-handler';
 import jwt from 'jsonwebtoken';
-//import User from '../models/User.js';
+import User from '../models/User.js';
 
-const authMiddleware = asyncHandler(async (req, res, next) => {
+const AuthHandler = asyncHandler(async (req, res, next) => {
 	let token;
 
 	if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
@@ -10,20 +10,22 @@ const authMiddleware = asyncHandler(async (req, res, next) => {
 	}
 
 	if (!token) {
-		res.status(401);
-		throw new Error('Not authrize to access this route');
+		var err = new Error('Not authrize to access this route');
+        err.status = 401;
+		res.status(err.status || 500).json({status: err.status, message: err.message});
+		return;
 	}
 
 	try {
 		const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
-
-		//req.user = await User.findById(decoded.id);
-
+		req.id = decoded.id;
 		next();
 	} catch (error) {
-		res.status(401);
-		throw new Error(error.message);
+        var err = new Error();
+        err.status = 401;
+		res.status(err.status || 500).json({status: err.status, message: error.message});
+		return;
 	}
 });
 
-export default authMiddleware;
+export default AuthHandler;

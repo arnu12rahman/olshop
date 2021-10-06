@@ -1,17 +1,17 @@
 import express from 'express';
 import {
-	register
+	register,
+	login,
+	getMe,
+	updatePassword
 } from '../services/AuthController.js';
-import authMiddleware from '../middlewares/AuthHandler.js';
+import authHandler from '../middlewares/AuthHandler.js';
 
 const router = express.Router();
 
-//router.route('/login').post(login);
+router.route('/login').post(login);
 router.route('/register').post(register);
-/*router.route('/me').get(authMiddleware, getMe);
-router.route('/updateProfile').put(authMiddleware, updateProfile);
-router.route('/updatepassword').put(authMiddleware, updatePassword);
-router.route('/forgotpassword').post(forgotPassword);
-router.route('/resetPassword/:hashToken').put(resetPassword);
-*/
+router.route('/me').get(authHandler, getMe);
+router.route('/update-password').post(authHandler, updatePassword);
+
 export default router;

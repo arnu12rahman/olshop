@@ -7,8 +7,8 @@ import path from "path";
 
 //ROUTES
 import AuthRoutes from "./routes/AuthRoutes.js";
-/*import UserRoutes from "./routes/UserRoutes.js";
-import ProductRoutes from "./routes/ProductRoutes.js";
+import UserRoutes from "./routes/UserRoutes.js";
+/*import ProductRoutes from "./routes/ProductRoutes.js";
 import CartRoutes from "./routes/CartRoutes.js";
 import OrderRoutes from "./routes/OrderRoutes.js";
 */
@@ -33,8 +33,8 @@ app.get("/", (req, res) => {
 app.use("/api/auth", AuthRoutes);
 
 //USER ROUTES
-/*app.use("/api/users", UserRoutes);
-
+app.use("/api/users", UserRoutes);
+/*
 //PRODUCTS ROUTES
 app.use("/api/products", ProductRoutes);
 
