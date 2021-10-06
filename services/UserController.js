@@ -8,14 +8,6 @@ ROUTE /api/users/update-profile
 METHOD POST
 */
 export const updateProfile = asyncHandler(async (req, res) => {
-	let user = await User.findById(req.id);
-
-	if (user.length == 0) {
-		var err = new Error('User not found');
-        err.status = 404;
-		res.status(err.status || 500).json({status: err.status, message: err.message});
-		return;
-	}
 	const updateData = {
 		name: req.body.name,
 		profile_account: req.body.profile_account,
@@ -47,18 +39,10 @@ export const updateProfile = asyncHandler(async (req, res) => {
 
 /*
 DESC Get Address
-ROUTE /api/user/get-address
+ROUTE /api/users/get-address
 METHOD GET
 */
 export const getAddress = asyncHandler(async (req, res) => {
-	let user = await User.findById(req.id);
-	if (user.length === 0) {
-		var err = new Error('User Not Found');
-		err.status = 404;
-		res.status(err.status || 500).json({status: err.status, message: err.message});
-		return;
-	}
-
 	let addressData = await User.getAddress(req.id);
 
 	res.status(200).json({
@@ -69,18 +53,10 @@ export const getAddress = asyncHandler(async (req, res) => {
 
 /*
 DESC Create Address
-ROUTE /api/user/create-address
+ROUTE /api/users/create-address
 METHOD POST
 */
 export const createAddress = asyncHandler(async (req, res) => {
-	let user = await User.findById(req.id);
-	if (user.length === 0) {
-		var err = new Error('User Not Found');
-		err.status = 404;
-		res.status(err.status || 500).json({status: err.status, message: err.message});
-		return;
-	}
-
 	const insertData = {
 		user_id: req.id,
 		recipient_name: req.body.recipient_name,
@@ -107,13 +83,14 @@ export const createAddress = asyncHandler(async (req, res) => {
 
 /*
 DESC Update Address
-ROUTE /api/user/update-address
+ROUTE /api/users/update-address
 METHOD POST
 */
 export const updateAddress = asyncHandler(async (req, res) => {
-	let user = await User.findById(req.id);
-	if (user.length === 0) {
-		var err = new Error('User Not Found');
+	//check data
+	let searchData =  await User.getAddressById(req.body.address_id);
+	if(searchData.length === 0){
+		var err = new Error('Address data not found');
 		err.status = 404;
 		res.status(err.status || 500).json({status: err.status, message: err.message});
 		return;
@@ -143,13 +120,14 @@ export const updateAddress = asyncHandler(async (req, res) => {
 
 /*
 DESC Delete Address
-ROUTE /api/user/delete-address
+ROUTE /api/users/delete-address
 METHOD POST
 */
 export const deleteAddress = asyncHandler(async (req, res) => {
-	let user = await User.findById(req.id);
-	if (user.length === 0) {
-		var err = new Error('User Not Found');
+	//check data
+	let searchData =  await User.getAddressById(req.body.address_id);
+	if(searchData.length === 0){
+		var err = new Error('Address data not found');
 		err.status = 404;
 		res.status(err.status || 500).json({status: err.status, message: err.message});
 		return;
