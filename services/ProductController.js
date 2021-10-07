@@ -52,7 +52,7 @@ METHOD POST
 export const createProduct = asyncHandler(async (req, res) => {
 	let user = await User.findById(req.id);
 	if (user[0].auth_assign !== "Administrator") {
-		var err = new Error('Not authrize to access this route');
+		var err = new Error('Not authorize to access this route');
 		err.status = 404;
 		res.status(err.status || 500).json({status: err.status, message: err.message});
 		return;
@@ -100,7 +100,7 @@ METHOD POST
 export const updateProduct = asyncHandler(async (req, res) => {
 	let user = await User.findById(req.id);
 	if (user[0].auth_assign !== "Administrator") {
-		var err = new Error('Not authrize to access this route');
+		var err = new Error('Not authorize to access this route');
 		err.status = 404;
 		res.status(err.status || 500).json({status: err.status, message: err.message});
 		return;
@@ -117,7 +117,7 @@ export const updateProduct = asyncHandler(async (req, res) => {
 
 	//count discount_price
 	let discount_price = 0;
-	if(req.body.discount_percentage != "0"){
+	if(typeof req.body.discount_percentage != 'undefined' && req.body.discount_percentage != "0"){
 		discount_price = (req.body.price * req.body.discount_percentage)/100;
 	}
 
@@ -157,7 +157,7 @@ METHOD POST
 export const deleteProduct = asyncHandler(async (req, res) => {
 	let user = await User.findById(req.id);
 	if (user[0].auth_assign !== "Administrator") {
-		var err = new Error('Not authrize to access this route');
+		var err = new Error('Not authorize to access this route');
 		err.status = 404;
 		res.status(err.status || 500).json({status: err.status, message: err.message});
 		return;

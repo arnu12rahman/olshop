@@ -18,6 +18,15 @@ export const register = asyncHandler(async (req, res) => {
 		return;
 	}
 
+	//check if email valid or not
+	let regexEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+	if(!req.body.email.match(regexEmail)){
+		var err = new Error('Email not valid format');
+        err.status = 406;
+		res.status(err.status || 500).json({status: err.status, message: err.message})
+		return;
+	}
+
 	//check data exist
 	const userExist =  await User.findOne(req.body.email);
 	if (userExist.length !== 0) {
@@ -90,8 +99,8 @@ export const login = asyncHandler(async (req, res) => {
 			},
 		});
 	} else {
-		var err = new Error('password incorrect');
-        err.status = 401;
+		var err = new Error('Incorrect password');
+        err.status = 406;
 		res.status(err.status || 500).json({status: err.status, message: err.message});
 		return;
 	}
@@ -121,7 +130,7 @@ export const getMe = asyncHandler(async (req, res) => {
 			name: userData[0].name,
 			profile_account: userData[0].profile_account,
 			gender: userData[0].gender,
-			birth_date: date.format(userData[0].birth_date,'YYYY-MM-DD'),
+			birth_date: (userData[0].birth_date == null || userData[0].birth_date == "") ? userData[0].birth_date : date.format(userData[0].birth_date,'YYYY-MM-DD'),
 			phone: userData[0].phone,
 			addressData: addressData
 		},

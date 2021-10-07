@@ -10,7 +10,7 @@ const AuthHandler = asyncHandler(async (req, res, next) => {
 	}
 
 	if (!token) {
-		var err = new Error('Not authrize to access this route');
+		var err = new Error('Not authorize to access this route');
         err.status = 401;
 		res.status(err.status || 500).json({status: err.status, message: err.message});
 		return;

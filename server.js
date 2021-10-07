@@ -1,7 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
-//import { notFound, errorHandler } from "./middlewares/ErrorHandler.js";
 
 //ROUTES
 import AuthRoutes from "./routes/AuthRoutes.js";
@@ -15,8 +14,6 @@ const app = express();
 dotenv.config();
 app.use(cors());
 app.use(express.json({limit: '50mb'}));
-//app.use(notFound);
-//app.use(errorHandler);
 
 // WELCOME ROUTE
 app.get("/", (req, res) => {

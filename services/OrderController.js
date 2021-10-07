@@ -115,7 +115,7 @@ export const createOrder = asyncHandler(async (req, res) => {
 	//validate recipient address
 	let addressData = await User.getAddressById(req.body.address_id);
 	if(addressData.length === 0){
-		var err = new Error('Recipeint data not found');
+		var err = new Error('Recipient data not found');
 		err.status = 404;
 		res.status(err.status || 500).json({status: err.status, message: err.message});
 		return;
@@ -183,18 +183,20 @@ ROUTE /api/orders/update-order
 METHOD POST
 */
 export const updateOrder = asyncHandler(async (req, res) => {
-	let user = await User.findById(req.id);
-	if (user[0].auth_assign !== "Administrator") {
-		var err = new Error('Not authrize to access this route');
-		err.status = 404;
-		res.status(err.status || 500).json({status: err.status, message: err.message});
-		return;
-	}
-
 	//check data
 	let searchOrder =  await Order.getOrderById(req.body.order_id);
 	if(searchOrder.length === 0){
 		var err = new Error('Order data not found');
+		err.status = 404;
+		res.status(err.status || 500).json({status: err.status, message: err.message});
+		return;
+	}
+	let status_data = (req.body.status === null || req.body.status === "" || typeof req.body.status == 'undefined') ? searchOrder[0].status : req.body.status;
+
+	//check user access
+	let user = await User.findById(req.id);
+	if (user[0].auth_assign !== "Administrator" && status_data !== "received") {
+		var err = new Error('Not authorize to access this route');
 		err.status = 404;
 		res.status(err.status || 500).json({status: err.status, message: err.message});
 		return;
@@ -205,6 +207,7 @@ export const updateOrder = asyncHandler(async (req, res) => {
 		receipt_number: (req.body.receipt_number === null || req.body.receipt_number === "" || typeof req.body.receipt_number == 'undefined') ? searchOrder[0].receipt_number : req.body.receipt_number,
 		delivered_date: (req.body.delivered_date === null || req.body.delivered_date === "" || typeof req.body.delivered_date == 'undefined') ? searchOrder[0].delivered_date : req.body.delivered_date,
 		received_date: (req.body.received_date === null || req.body.received_date === "" || typeof req.body.received_date == 'undefined') ? searchOrder[0].received_date : req.body.received_date,
+		status: status_data,
 		updated_at: new Date()
 	};
 
