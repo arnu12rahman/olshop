@@ -30,6 +30,7 @@
     "mysql": "github:mysqljs/mysql",
     "nodemailer": "^6.6.5",
     "nodemon": "^2.0.13",
-    "path": "^0.12.7"
+    "path": "^0.12.7",
+    "uniqid": "^5.4.0"
   }
 }

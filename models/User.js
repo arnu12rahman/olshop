@@ -109,6 +109,20 @@ User.getAddress = (id) => {
 	});
 };
 
+User.getAddressOne = (id) => {
+	return new Promise(function (resolve, reject) {
+		var sql = `SELECT a.id user_id, b.id profile_id, c.id address_id, c.recipient_name, c.recipient_phone, c.address_1, c.address_2, c.address_3 FROM user a
+		LEFt JOIN profile b on a.id = b.user_id
+		LEFT JOIN address c on a.id = c.user_id
+		WHERE a.id = ? limit 1`;
+		db.query(sql, id, (err, result) => {
+			if (err) reject(err);
+
+			resolve(result);
+		});
+	});
+};
+
 User.getAddressById = (id) => {
 	return new Promise(function (resolve, reject) {
 		var sql = `SELECT id address_id, recipient_name, recipient_phone, address_1, address_2, address_3 FROM address WHERE id = ?`;

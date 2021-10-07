@@ -29,6 +29,22 @@ Cart.getCart = (id) => {
 	});
 };
 
+Cart.sumCart = (id) => {
+	return new Promise(function (resolve, reject) {
+		var sql = `SELECT
+		sum((c.price-c.discount_price)*a.quantity) price
+		FROM cart a
+		INNER JOIN user b on b.id = a.user_id
+		INNER JOIN product c on c.id = a.product_id
+		WHERE a.user_id = ?`;
+		db.query(sql,id,(err, result) => {
+			if (err) reject(err);
+
+			resolve(result);
+		});
+	});
+};
+
 Cart.insertCart = (data) => {
 	return new Promise(function (resolve, reject) {
 		var sql = "INSERT INTO cart set ?";

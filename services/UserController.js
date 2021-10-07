@@ -8,12 +8,13 @@ ROUTE /api/users/update-profile
 METHOD POST
 */
 export const updateProfile = asyncHandler(async (req, res) => {
+	let profileData =  await User.getProfile(req.id);
 	const updateData = {
-		name: req.body.name,
-		profile_account: req.body.profile_account,
-		gender: req.body.gender,
-		birth_date: req.body.birth_date,
-		phone: req.body.phone,
+		name: (req.body.name === null || req.body.name === "" || typeof req.body.name == 'undefined') ? profileData[0].name : req.body.name,
+		profile_account: (typeof req.body.profile_account == 'undefined') ? profileData[0].profile_account : req.body.profile_account,
+		gender: (typeof req.body.gender == 'undefined') ? profileData[0].gender : req.body.gender,
+		birth_date: (typeof req.body.birth_date == 'undefined') ? profileData[0].birth_date : req.body.birth_date,
+		phone: (req.body.phone === null || req.body.phone === "" || typeof req.body.phone == 'undefined') ? profileData[0].phone : req.body.phone,
 		updated_at: new Date()
 	};
 
@@ -97,11 +98,11 @@ export const updateAddress = asyncHandler(async (req, res) => {
 	}
 
 	const updateData = {
-		recipient_name: req.body.recipient_name,
-		recipient_phone: req.body.recipient_phone,
-		address_1: req.body.address_1,
-		address_2: req.body.address_2,
-		address_3: req.body.address_3,
+		recipient_name: (req.body.recipient_name === null || req.body.recipient_name === "" || typeof req.body.recipient_name == 'undefined') ? searchData[0].recipient_name : req.body.recipient_name,
+		recipient_phone: (req.body.recipient_phone === null || req.body.recipient_phone === "" || typeof req.body.recipient_phone == 'undefined') ? searchData[0].recipient_phone : req.body.recipient_phone,
+		address_1: (req.body.address_1 === null || req.body.address_1 === "" || typeof req.body.address_1 == 'undefined') ? searchData[0].address_1 : req.body.address_1,
+		address_2: (typeof req.body.address_2 == 'undefined') ? searchData[0].address_2 : req.body.address_2,
+		address_3: (typeof req.body.address_3 == 'undefined') ? searchData[0].address_3 : req.body.address_3,
 		updated_at: new Date()
 	};
 

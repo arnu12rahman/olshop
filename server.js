@@ -8,9 +8,7 @@ import AuthRoutes from "./routes/AuthRoutes.js";
 import UserRoutes from "./routes/UserRoutes.js";
 import ProductRoutes from "./routes/ProductRoutes.js";
 import CartRoutes from "./routes/CartRoutes.js";
-/*
 import OrderRoutes from "./routes/OrderRoutes.js";
-*/
 
 //initial config
 const app = express();
@@ -39,10 +37,8 @@ app.use("/api/products", ProductRoutes);
 //CART ROUTES
 app.use("/api/cart", CartRoutes);
 
-/*
 //ORDER ROUTES
 app.use("/api/orders", OrderRoutes);
-*/
 
 const PORT = process.env.PORT || 3000;
 

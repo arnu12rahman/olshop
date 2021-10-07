@@ -1,5 +1,4 @@
 import asyncHandler from 'express-async-handler';
-import date from 'date-and-time'
 import Product from '../models/Product.js';
 import User from '../models/User.js';
 
@@ -123,17 +122,17 @@ export const updateProduct = asyncHandler(async (req, res) => {
 	}
 
 	const updateData = {
-		name: req.body.name,
-		description: req.body.description,
-		brand: req.body.brand,
-		category: req.body.category,
-		price: req.body.price,
-		discount_percentage: req.body.discount_percentage,
+		name: (req.body.name === null || req.body.name === "" || typeof req.body.name == 'undefined') ? searchData[0].name : req.body.name,
+		description: (req.body.description === null || req.body.description === "" || typeof req.body.description == 'undefined') ? searchData[0].description : req.body.description,
+		brand: (req.body.brand === null || req.body.brand === "" || typeof req.body.brand == 'undefined') ? searchData[0].brand : req.body.brand,
+		category: (req.body.category === null || req.body.category === "" || typeof req.body.category == 'undefined') ? searchData[0].category : req.body.category,
+		price: (typeof req.body.price == 'undefined') ? searchData[0].price : req.body.price,
+		discount_percentage: (typeof req.body.discount_percentage == 'undefined') ? searchData[0].discount_percentage : req.body.discount_percentage,
 		discount_price: discount_price,
-		stock: req.body.stock,
-		rating: req.body.rating,
-		count_review: req.body.count_review,
-		image_content: req.body.image_content,
+		stock:  (typeof req.body.stock == 'undefined') ? searchData[0].stock : req.body.stock,
+		rating:  (typeof req.body.rating == 'undefined') ? searchData[0].rating : req.body.rating,
+		count_review:  (typeof req.body.count_review == 'undefined') ? searchData[0].count_review : req.body.count_review,
+		image_content: (req.body.image_content === null || req.body.image_content === "" || typeof req.body.image_content == 'undefined') ? searchData[0].image_content : req.body.image_content,
 		updated_at: new Date()
 	};
 

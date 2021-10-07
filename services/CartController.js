@@ -1,5 +1,4 @@
 import asyncHandler from 'express-async-handler';
-import date from 'date-and-time'
 import Cart from '../models/Cart.js';
 import Product from '../models/Product.js';
 
@@ -88,7 +87,7 @@ export const updateCart = asyncHandler(async (req, res) => {
 	}
 
 	const updateData = {
-		quantity: req.body.quantity,
+		quantity: (typeof req.body.quantity == 'undefined') ? searchCart[0].quantity : req.body.quantity,
 		updated_at: new Date()
 	};
 
