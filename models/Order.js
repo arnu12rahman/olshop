@@ -22,7 +22,7 @@ Order.getOrderData = (id) => {
 Order.getOrderMaster = (id) => {
 	return new Promise(function (resolve, reject) {
 		var sql = `SELECT id order_id, order_code, total_price, receipt_number, recipient_name, recipient_phone,
-		recipient_address, status, note, created_at as order_date, payment_date,
+		recipient_address, status, note, created_at as order_date, payment_method, bank_name, bank_account_number, bank_account_name, payment_date, payment_evidence,
 		delivery_service, delivered_date, received_date
 		FROM order_master
 		WHERE status != "canceled" AND user_id = ?`;
@@ -96,6 +96,23 @@ Order.deleteDetailOrder = (id) => {
 			if (err) reject(err);
 
 			resolve("success");
+		});
+	});
+};
+
+Order.getStatusOrder = (id,status) => {
+	return new Promise(function (resolve, reject) {
+		var sql = `SELECT a.id order_id, a.order_code, a.total_price,
+		b.product_name sample_product_name, b.product_image sample_product_image, b.quantity sample_product_quantity,
+		b.product_price sample_product_price, COUNT(b.product_name) product_total
+		FROM order_master a
+		INNER JOIN order_detail b on b.order_id = a.id
+		WHERE a.status = ? AND a.user_id = ?
+		GROUP BY a.order_code`;
+		db.query(sql,[status,id],(err, result) => {
+			if (err) reject(err);
+
+			resolve(result);
 		});
 	});
 };

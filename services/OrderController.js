@@ -59,7 +59,7 @@ export const getOrders = asyncHandler(async (req, res) => {
 /*
 DESC Get Order Master and Detail Data
 ROUTE /api/orders/get-order
-METHOD GET
+METHOD POST
 */
 export const getOrder = asyncHandler(async (req, res) => {
 	let OrderData = await Order.getOrderMaster(req.body.order_id);
@@ -81,6 +81,10 @@ export const getOrder = asyncHandler(async (req, res) => {
 		status: OrderData[0].status,
 		note: OrderData[0].note,
 		order_date: (OrderData[0].order_date) ? date.format(OrderData[0].order_date,'YYYY-MM-DD') : null,
+		payment_method: OrderData[0].payment_method,
+		bank_name: OrderData[0].bank_name,
+		bank_account_name: OrderData[0].bank_account_name,
+		bank_account_number: OrderData[0].bank_account_number,
 		payment_date: (OrderData[0].payment_date) ? date.format(OrderData[0].payment_date,'YYYY-MM-DD') : null,
 		delivery_service: OrderData[0].delivery_service,
 		delivered_date: (OrderData[0].delivered_date) ? date.format(OrderData[0].delivered_date,'YYYY-MM-DD') : null,
@@ -258,4 +262,65 @@ export const deleteOrder = asyncHandler(async (req, res) => {
 		var err = new Error('Failed delete Order, please call administrator.');
 		res.status(500).json({status: err.status, message: err.message});
 	}
+});
+
+/*
+DESC Confirmation Payment (upload evidence payment)
+ROUTE /api/orders/confirm-payment
+METHOD POST
+*/
+export const confirmPayment = asyncHandler(async (req, res) => {
+	//check data
+	let searchOrder =  await Order.getOrderById(req.body.order_id);
+	if(searchOrder.length === 0){
+		var err = new Error('Order data not found');
+		err.status = 404;
+		res.status(err.status || 500).json({status: err.status, message: err.message});
+		return;
+	}
+
+	//check payment evidence
+	if(req.body.payment_evidence === null || req.body.payment_evidence === "" || typeof req.body.payment_evidence == 'undefined'){
+		var err = new Error('Payment evidence data not found');
+		err.status = 404;
+		res.status(err.status || 500).json({status: err.status, message: err.message});
+		return;
+	}
+
+	const updateData = {
+		payment_evidence: req.body.payment_evidence,
+		updated_at: new Date()
+	};
+
+	const result = await Order.updateOrder(updateData,{id: req.body.order_id});
+	if(result == "success"){
+		res.status(200).json({
+			success: true,
+			data: "Success upload evidence payment"
+		});
+	}else{
+		var err = new Error('Failed confirm payment, please call administrator.');
+		res.status(500).json({status: err.status, message: err.message});
+	}
+});
+
+/*
+DESC Get Order Master and sample detail product based on status
+ROUTE /api/orders/status-orders
+METHOD POST
+*/
+export const statusOrders = asyncHandler(async (req, res) => {
+	let OrderData = await Order.getStatusOrder(req.id,req.body.status);
+	if(OrderData.length === 0){
+		var err = new Error('Order data not found or empty');
+		err.status = 404;
+		res.status(err.status || 500).json({status: err.status, message: err.message});
+		return;
+	}
+
+	res.status(200).json({
+		success: true,
+		countData: OrderData.length,
+		data: OrderData,
+	});
 });
