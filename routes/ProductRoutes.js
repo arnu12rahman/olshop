@@ -2,6 +2,7 @@ import express from 'express';
 import {
 	getAllProduct,
 	getProduct,
+	getInactiveProduct,
 	filterProduct,
 	createProduct,
 	updateProduct,
@@ -11,11 +12,12 @@ import authHandler from '../middlewares/AuthHandler.js';
 
 const router = express.Router();
 
-router.route('/get-all-Product').get(getAllProduct);
-router.route('/get-Product').post(getProduct);
-router.route('/filter-Product').post(filterProduct);
-router.route('/create-Product').post(authHandler, createProduct);
-router.route('/update-Product').post(authHandler, updateProduct);
-router.route('/delete-Product').post(authHandler, deleteProduct);
+router.route('/get-all-product').get(getAllProduct);
+router.route('/get-product').post(getProduct);
+router.route('/get-inactive-product').get(authHandler, getInactiveProduct);
+router.route('/filter-product').post(filterProduct);
+router.route('/create-product').post(authHandler, createProduct);
+router.route('/update-product').post(authHandler, updateProduct);
+router.route('/delete-product').post(authHandler, deleteProduct);
 
 export default router;

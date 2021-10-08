@@ -31,6 +31,28 @@ export const getProduct = asyncHandler(async (req, res) => {
 });
 
 /*
+DESC Get Inactive Product
+ROUTE /api/products/get-inactive-product
+METHOD GET
+*/
+export const getInactiveProduct = asyncHandler(async (req, res) => {
+	let user = await User.findById(req.id);
+	if (user[0].auth_assign !== "Administrator") {
+		var err = new Error('Not authorize to access this route');
+		err.status = 404;
+		res.status(err.status || 500).json({status: err.status, message: err.message});
+		return;
+	}
+
+	let ProductData = await Product.getInactiveProduct();
+
+	res.status(200).json({
+		success: true,
+		data: ProductData,
+	});
+});
+
+/*
 DESC Filter Product
 ROUTE /api/products/filter-product
 METHOD POST
@@ -107,7 +129,7 @@ export const updateProduct = asyncHandler(async (req, res) => {
 	}
 
 	//check data
-	let searchData =  await Product.getProduct(req.body.product_id);
+	let searchData =  await Product.getProduct(req.body.product_id,"admin");
 	if(searchData.length === 0){
 		var err = new Error('Product data not found');
 		err.status = 404;
@@ -138,7 +160,7 @@ export const updateProduct = asyncHandler(async (req, res) => {
 
 	const result = await Product.updateProduct(updateData,{id: req.body.product_id});
 	if(result == "success"){
-		let ProductData =  await Product.getProduct(req.body.product_id);
+		let ProductData =  await Product.getProduct(req.body.product_id,"admin");
 		res.status(200).json({
 			success: true,
 			data: ProductData,
@@ -164,7 +186,7 @@ export const deleteProduct = asyncHandler(async (req, res) => {
 	}
 
 	//check data
-	let searchData =  await Product.getProduct(req.body.product_id);
+	let searchData =  await Product.getProduct(req.body.product_id,"admin");
 	if(searchData.length === 0){
 		var err = new Error('Product data not found');
 		err.status = 404;
@@ -172,7 +194,12 @@ export const deleteProduct = asyncHandler(async (req, res) => {
 		return;
 	}
 
-	const result = await Product.deleteProduct(req.body.product_id);
+	const updateData = {
+		status: "inactive",
+		updated_at: new Date()
+	};
+
+	const result = await Product.updateProduct(updateData,{id: req.body.product_id});
 	if(result == "success"){
 		res.status(200).json({
 			success: true,
